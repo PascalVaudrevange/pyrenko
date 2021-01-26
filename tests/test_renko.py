@@ -18,5 +18,3 @@ def data():
         'value': s
     })
     return result
-
-
