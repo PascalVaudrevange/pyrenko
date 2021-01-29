@@ -14,10 +14,18 @@ def _process_bin(c: int, cuts: [int], i: int) -> [int]:
         elif abs(diff) > 1:
             # if there is a jump of more than one box size,
             # fill the gaps
-            result = range(cuts[i - 1], c, np.sign(diff))
+            s = np.sign(diff)
+            result = range(cuts[i - 1] + s, c + s, s)
         else:
             # ignore duplicates
             result = []
+    return result
+
+
+def get_data(r: float, sigma: float, dt: float = 0.0001, n_timestep: int = 10000, random_seed: int = 12345):
+    dw = math.sqrt(dt) * np.random.standard_normal(n_timestep)
+    ds = (r - 0.5 * sigma**2) * dt + sigma * dw
+    result = np.exp(np.cumsum(ds))
     return result
 
 
@@ -43,4 +51,5 @@ def get_renko(data: [float], delta: float = 0.02) -> [float]:
             for i_, c_ in enumerate(cuts)
         )
     )
-    return result
+
+    return {'renko': result, 'binned_values': cuts}
